@@ -1,15 +1,67 @@
 
 - [LeetCode](#leetcode)
+    - [2020/1/6](#202016)
+      - [94. Binary Tree Inorder Traversal](#94-binary-tree-inorder-traversal)
+      - [230. Kth Smallest Element in a BST](#230-kth-smallest-element-in-a-bst)
     - [2020/1/4](#202014)
     - [2020/1/3](#202013)
       - [88.Merge Sorted Array](#88merge-sorted-array)
       - [75.Sort Colors](#75sort-colors)
-      - [148.Sort List](#148sort-list)
-      - [912.Sort An Array](#912sort-an-array)
+      - [148. Sort List](#148-sort-list)
+      - [912. Sort An Array](#912-sort-an-array)
 
 # LeetCode
 
 LeetCode Record
+
+### 2020/1/6
+
+#### 94. Binary Tree Inorder Traversal
+递归实现，利用引用传参，减少内存占用
+```c++
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        _inorderTraversal(root, res);        
+        return res;
+    }
+private:
+    void _inorderTraversal(TreeNode* root, vector<int>& res);
+};
+
+void Solution::_inorderTraversal(TreeNode* root, vector<int>& res){
+    if(root == nullptr) return;
+    
+    _inorderTraversal(root->left, res);
+    res.push_back(root->val);
+    _inorderTraversal(root->right, res);
+}
+```
+利用栈，迭代算法
+**关键：Stack[i] 是 Stack[i+1] 的左孩子。**
+```c++
+while(root != nullptr || !track.empty()){
+    while(root != nullptr){
+        track.push(root);
+        root = root->left;
+    }
+    root = track.top();
+    track.pop();
+    res.push_back(root->val);
+    root = root->left;
+}
+```
+
+
+#### 230. Kth Smallest Element in a BST
+
+Priority_queue + inoder_Tree_Walk
+
+基于大顶堆的优先队列：
+```c++
+priority_queue<int, vector<int>, less<int>> pq;
+```
 
 ### 2020/1/4
 
@@ -82,7 +134,7 @@ public:
     }
 };
 ```
-#### 148.Sort List
+#### 148. Sort List
 最优解法使用 MergeSort
 
 MergeSort时几个注意的点：
@@ -94,7 +146,7 @@ MergeSort时几个注意的点：
 2. partition 过程中需要利用好 head 指针
 3. partition 之后，head 是前段链表的最后一个元素，执行 head->next = NULL 将链表断开
 
-#### 912.Sort An Array
+#### 912. Sort An Array
 
 归并排序实现中，用好迭代器范围
 

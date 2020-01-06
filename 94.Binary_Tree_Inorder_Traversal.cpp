@@ -2,45 +2,44 @@
 #include<iostream>
 #include<string>
 using namespace std;
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+ public:
+  vector<int> inorderTraversal(TreeNode* root) {
+    vector<int> res;
+    stack<TreeNode*> track;
 
-struct TreeNode{    
-    int val;
-    TreeNode *left=nullptr;
-    TreeNode *right=nullptr;
+    while (root != nullptr || !track.empty()) {
+      while (root != nullptr) {
+        track.push(root);
+        root = root->left;
+      }
+
+      root = track.top();
+      track.pop();
+      res.push_back(root->val);
+      root = root->right;
+    }
+
+    return res;
+  }
+
+ private:
+  void inorderTraversal_Recur(TreeNode* root, vector<int>& res);
 };
 
-vector<int> InorderTraversal(TreeNode *root);
+void Solution::inorderTraversal_Recur(TreeNode* root, vector<int>& res) {
+  if (root == nullptr) return;
 
-int main(){
-    TreeNode root, n1, n2, n3, n4, n5;
-    root.val = 0, root.left = &n1, root.right = &n2;
-    n1.val = 1, n1.left = &n3, n1.right = &n4;
-    n2.val = 2;
-    n3.val = 3, n3.right = &n5;
-    n4.val = 4, n5.val = 5;
-
-    auto ans = InorderTraversal(&root);
-    for(auto i:ans){
-        cout << i << ' ';
-    }
-    //cout << InorderTraversal(&root) << endl;
-}
-
-vector<int> InorderTraversal(TreeNode *root){
-    
-    if(root==nullptr){
-        vector<int> res;
-        return res;
-        }
-
-    vector<int> left = InorderTraversal(root->left);
-
-    left.insert(left.end(), root->val);
-
-    vector<int> right = InorderTraversal(root->right);
-
-    if(!right.empty())
-        left.insert(left.end(), right.begin(), right.end());
-
-    return left;
+  inorderTraversal_Recur(root->left, res);
+  res.push_back(root->val);
+  inorderTraversal_Recur(root->right, res);
 }
