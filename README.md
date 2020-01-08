@@ -1,5 +1,6 @@
 
 - [LeetCode](#leetcode)
+    - [2020/1/8](#202018)
     - [2020/1/7](#202017)
       - [LintCode 448. Inorder Successor in BST](#lintcode-448-inorder-successor-in-bst)
       - [235. Lowest Common Ancestor of a Binary Search Tree](#235-lowest-common-ancestor-of-a-binary-search-tree)
@@ -19,6 +20,18 @@
 
 LeetCode Record
 
+### 2020/1/8
+
+红黑树：
+1. 结点非黑即红
+2. 根节点叶结点为黑
+3. 红节点孩子必须为黑
+4. 从任意一个结点到其子孙结点的简单路径上的黑结点数量相同。
+
+特殊性质：
+1. 内部节点全为黑时，黑节点最多
+2. n 个内部节点，红:黑最大比例为 2:1。当且仅当红黑树刚好为满二叉树，且红黑结点按照一层鸿一层黑分布时，达到这种最大比例。
+
 ### 2020/1/7
 
 #### LintCode 448. Inorder Successor in BST
@@ -28,7 +41,7 @@ LeetCode Record
 
 解法：
 1. 利用 stack 保存 p 的所有祖先
-2. 从 stack 中寻找满足条件的结点
+2. 从 stack 中寻找满足条件 2 的结点
 
 ```c++
 /**
@@ -40,7 +53,6 @@ LeetCode Record
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-
 
 class Solution {
 public:
