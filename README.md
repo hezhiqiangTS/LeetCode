@@ -1,5 +1,10 @@
 
 - [LeetCode](#leetcode)
+    - [2020/1/7](#202017)
+      - [LintCode 448. Inorder Successor in BST](#lintcode-448-inorder-successor-in-bst)
+      - [235. Lowest Common Ancestor of a Binary Search Tree](#235-lowest-common-ancestor-of-a-binary-search-tree)
+      - [701. Insert into a Binary Search Tree](#701-insert-into-a-binary-search-tree)
+      - [145. Binary Tree Postorder Traversal](#145-binary-tree-postorder-traversal)
     - [2020/1/6](#202016)
       - [94. Binary Tree Inorder Traversal](#94-binary-tree-inorder-traversal)
       - [230. Kth Smallest Element in a BST](#230-kth-smallest-element-in-a-bst)
@@ -13,6 +18,151 @@
 # LeetCode
 
 LeetCode Record
+
+### 2020/1/7
+
+#### LintCode 448. Inorder Successor in BST
+二叉搜索树的中序遍历后继：
+1. 如果 p 的右子树存在，那么 p 的中序后继结点为 Tree-Minumum(p->right)
+2. 否则 p 的后继为 p 的最近祖先节点 y，且 y 的左孩子也是 p 的祖先节点。
+
+解法：
+1. 利用 stack 保存 p 的所有祖先
+2. 从 stack 中寻找满足条件的结点
+
+```c++
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+
+class Solution {
+public:
+    /*
+     * @param root: The root of the BST.
+     * @param p: You need find the successor node of p.
+     * @return: Successor of p.
+     */
+    TreeNode * inorderSuccessor(TreeNode * root, TreeNode * p) {
+        // write your code here
+        if(root == nullptr || p == nullptr)
+            return nullptr;
+            
+        if(p->right != nullptr) 
+            return TreeMinimum(p->right);
+            
+        stack<TreeNode *> track;
+        track.push(nullptr);
+        
+        // 将 p 和 p 的所有祖先结点压栈
+        TreeNode* tracer = root;
+        while(tracer != p){
+            track.push(tracer);
+            if(tracer->val < p->val)
+                tracer = tracer->right;
+            else
+                tracer = tracer->left;
+        }
+        
+        TreeNode* node = p;
+        while(!track.empty()){
+            if(track.top() == nullptr || track.top()->left == node) 
+                return track.top();
+            node = track.top();
+            track.pop();
+            if(node == track.top()->left)
+                return track.top();
+        }
+        
+    }
+private:
+    TreeNode * TreeMinimum(TreeNode* root);
+};
+
+TreeNode * Solution::TreeMinimum(TreeNode * root){
+    while(root->left != nullptr){
+        root = root->left;
+    }
+    return root;
+}
+```
+
+#### 235. Lowest Common Ancestor of a Binary Search Tree
+首先，需要明确 LCA 的定义：结点 p 和 q 在二叉搜索树 T 中的 LCA 是同时以 p 和 q 作为自己孩子结点的结点中，具有最低高度的结点（**同时，我们允许结点自身也是自己的孩子结点**）。
+
+本题实现中，还假设 p 和 q 一定在 BST 中，且树中所有结点的值都不同。
+
+递归解法：
+```c++
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root->val < p->val && root->val < q->val){
+            return lowestCommonAncestor(root->right, p, q);
+        }
+        if(root->val > p->val && root->val > q->val){
+            return lowestCommonAncestor(root->left, p, q);
+        }
+        return root;
+    }
+};
+```
+迭代解法：
+```c++
+TreeNode* Solution::lowestCommonAncestor_Iter(TreeNode* root, TreeNode* p, TreeNode* q){
+    TreeNode* node = root;
+    while(true){
+        if(node->val < p->val && node->val < q->val)
+            node = node->right;
+        else if(node->val > p->val && node->val > q->val)
+            node = node->left;
+        else 
+            break;
+    }
+    return node;
+}
+```
+
+#### 701. Insert into a Binary Search Tree
+使用两个辅助指针，x 用来追踪带插入节点从根节点到叶节点的路径。y 始终指向 x 的双亲节点，当 x 前进到 nullptr 之后，y 刚好指向带插入节点的双亲节点。
+
+#### 145. Binary Tree Postorder Traversal
+迭代解法：
+```c++
+void Solution::postorderTraversal_Iteration(TreeNode* root, vector<int>& res){
+    stack<TreeNode*> track;
+    TreeNode* last = nullptr; // 记录上次被读值的节点
+    
+    while(root != nullptr || !track.empty()){
+        
+        while(root != nullptr){
+            track.push(root);
+            root = root->left;
+        }
+        
+        TreeNode* node = track.top();
+        
+        // root->right 存在，且 root 的右子树没有被遍历过
+        // 则遍历 root 右子树先
+        if(node->right != nullptr && last != node->right){
+            root = node->right;
+        }
+        // 否则说明 node 的左右子树都已经被遍历
+        // res.push_back 记录 node->val
+        else{
+            res.push_back(node->val);
+            last = node;
+            track.pop();
+        }
+    }
+}
+```
 
 ### 2020/1/6
 
@@ -39,19 +189,34 @@ void Solution::_inorderTraversal(TreeNode* root, vector<int>& res){
 }
 ```
 利用栈，迭代算法
-**关键：Stack[i] 是 Stack[i+1] 的左孩子。**
+**关键：Stack[i] 是 Stack[i+1] 的左孩子，stack.top() 是未被 res.push_back 的最近节点。**
 ```c++
 while(root != nullptr || !track.empty()){
     while(root != nullptr){
         track.push(root);
         root = root->left;
     }
-    root = track.top();
+    TreeNode *node = track.top();
+    res.push_back(node->val);
     track.pop();
-    res.push_back(root->val);
-    root = root->left;
+    root = node->left;
 }
 ```
+利用栈实现二叉树遍历时，关键点：
+1. 首先遍历左子树
+   ```c++
+   while(root != mullptr){
+       track.push(root);
+       root = root->left;
+   }
+   ```
+2. 当 node->val 被记录之后，需要将 node 从栈中弹出
+   ```c++
+   res.push_back(node->val);
+   track.pop();
+   ```
+这两点在先序、中序、后序遍历时都是一样的。
+
 
 
 #### 230. Kth Smallest Element in a BST
