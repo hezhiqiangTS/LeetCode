@@ -1,5 +1,7 @@
 
 - [LeetCode](#leetcode)
+    - [2020/1/10](#2020110)
+      - [56. Merge Intervals](#56-merge-intervals)
     - [2020/1/8](#202018)
     - [2020/1/7](#202017)
       - [LintCode 448. Inorder Successor in BST](#lintcode-448-inorder-successor-in-bst)
@@ -19,6 +21,37 @@
 # LeetCode
 
 LeetCode Record
+
+### 2020/1/10
+#### 56. Merge Intervals
+两种方法：
+1. 先排序，再 merge。排序可以使用标准库中的 sort 函数，注意比较函数需要定义为 static
+2. **使用 map**
+
+使用 map 时需要注意，map.lower_bound(k) 返回的是迭代器，迭代器指向的元素的 key 值**大于等于**k。所以构造 map 时需要将区间的后界作为key值，前界作为value。map 内部是有序的，map.lower_bound 可以找到第一个可以和插入区间进行合并的区间
+```c++
+vector<Interval> merge(vector<Interval>& intervals) {
+    map<int, int> r2l;
+    for (auto &i : intervals) {
+        int s = i.start, e = i.end;
+        // it 指向第一个符合合并条件的区间
+        auto it = r2l.lower_bound(i.start);
+
+        // map 有序，遍历 map 合并所有目标区间
+        while (it != r2l.end() && it->second <= i.end) {
+            s = min(s, it->second);
+            e = max(e, it->first);
+            // erase(it) 返回值需要注意
+            it = r2l.erase(it);
+        }
+        r2l[e] = s;
+    }
+    vector<Interval> ans;
+    for (auto &p: r2l) 
+        ans.push_back(Interval(p.second, p.first));
+    return ans;
+}
+```
 
 ### 2020/1/8
 
