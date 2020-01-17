@@ -1,5 +1,7 @@
 
 - [LeetCode](#leetcode)
+    - [2020/1/17](#2020117)
+      - [57. Insert Intervals](#57-insert-intervals)
     - [2020/1/10](#2020110)
       - [56. Merge Intervals](#56-merge-intervals)
     - [2020/1/8](#202018)
@@ -22,8 +24,47 @@
 
 LeetCode Record
 
+### 2020/1/17
+#### 57. Insert Intervals
+56，57 相似，但是
+```c++
+vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval)
+```
+intervals 中的区间是排好序的，而且不存在重叠区间，所以顺序操作即可，时间复杂度为 O(n)。
+
+56 Merge Intervals 中的输入中区间是区间是乱序，且重叠的。那么需要先排序或者借用 map。运行时间为 O(nlog n)
+
+```c++
+vector<vector<int>> Solution::_insert(vector<vector<int>>& intervals,
+                                      vector<int>& newInterval) {
+  size_t index = 0;
+  vector<vector<int>> res;
+  while (index < intervals.size() &&
+         intervals[index].back() < newInterval.front()) {
+    res.push_back(intervals[index++]);
+  }
+
+  while (index < intervals.size() &&
+         intervals[index].front() <= newInterval.back()) {
+    newInterval.front() = min(newInterval.front(), intervals[index].front());
+    newInterval.back() = max(newInterval.back(), intervals[index].back());
+    index++;
+  }
+  res.push_back(newInterval);
+  while (index < intervals.size()) {
+    res.push_back(intervals[index++]);
+  }
+
+  return res;
+}
+```
+
+
 ### 2020/1/10
 #### 56. Merge Intervals
+
+如果输入区间是有序的，那么有一点：合并肯定是“向后”合并的。如果[a1, a2]中的 a2 小于其后区间的左界，那么 [a1, a2] 左侧的所有区间都不会被影响。
+
 两种方法：
 1. 先排序，再 merge。排序可以使用标准库中的 sort 函数，注意比较函数需要定义为 static
 2. **使用 map**
