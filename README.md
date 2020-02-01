@@ -1,10 +1,14 @@
 
 - [LeetCode](#leetcode)
+    - [2020/2/1](#202021)
+      - [34. Find First and Last Position of Element in Sorted Array](#34-find-first-and-last-position-of-element-in-sorted-array)
+      - [35. Search Insert Position](#35-search-insert-position)
     - [2020/1/17](#2020117)
       - [57. Insert Intervals](#57-insert-intervals)
     - [2020/1/10](#2020110)
       - [56. Merge Intervals](#56-merge-intervals)
     - [2020/1/8](#202018)
+      - [红黑树](#%e7%ba%a2%e9%bb%91%e6%a0%91)
     - [2020/1/7](#202017)
       - [LintCode 448. Inorder Successor in BST](#lintcode-448-inorder-successor-in-bst)
       - [235. Lowest Common Ancestor of a Binary Search Tree](#235-lowest-common-ancestor-of-a-binary-search-tree)
@@ -23,6 +27,75 @@
 # LeetCode
 
 LeetCode Record
+
+### 2020/2/1
+#### 34. Find First and Last Position of Element in Sorted Array
+
+套用二分法通用模板，使用两次二分法，分别寻找 lower bound 和 upper bound
+
+二分法注意的点：
+1. start + 1 < end，保证死循环
+2. mid = start + (end - start) / 2，防止整数溢出
+3. nums[mid] == target 时移动 start 还是 end
+4. 循环结束之后分别判断 start 和 end
+
+```c++
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res(2, -1);
+        if(nums.empty()) return res;
+        
+        auto end = nums.size() - 1;
+        decltype(end) start = 0;
+        
+        // 使用二分法通用模板
+        // 使用整数索引
+        // 先找 lower bound
+        while(start + 1 < end){
+            auto mid = start + (end - start) / 2;
+            // 优先移动 end
+            if(nums.at(mid) >= target) 
+                end = mid;
+            else
+                start = mid;
+        }
+        // 注意顺序
+        if(nums.at(end) == target) res[0] = end;
+        if(nums.at(start) == target) res[0] = start;
+        
+        if(res[0] == -1) return res;
+        
+        // 不需要移动 start
+        end = nums.size() - 1;
+        // 寻找 upper bound
+        while(start + 1 < end){
+            auto mid = start + (end - start) - 1;
+            // 优先移动 start
+            if(nums.at(mid) <= target)
+                start = mid;
+            else
+                end = mid;
+        }
+        // 注意顺序，与之前相反
+        if(nums.at(start) == target) res[1] = start;
+        if(nums.at(end) == target) res[1] = end;
+        
+        return res;
+    }
+};
+```
+#### 35. Search Insert Position
+
+同样是二分法，相当于寻找34题区间的左界或者右界。稍微需要注意的就是最后的处理，以 target == 5 为例
+
+    [4,6] end
+    [4,5] end
+    [3,4] end+1
+    [5,5] start
+    [5,6] start
+    [6,7] start
+
 
 ### 2020/1/17
 #### 57. Insert Intervals
@@ -96,7 +169,7 @@ vector<Interval> merge(vector<Interval>& intervals) {
 
 ### 2020/1/8
 
-红黑树：
+#### 红黑树
 1. 结点非黑即红
 2. 根节点叶结点为黑
 3. 红节点孩子必须为黑
