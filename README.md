@@ -34,7 +34,7 @@ LeetCode Record
 套用二分法通用模板，使用两次二分法，分别寻找 lower bound 和 upper bound
 
 二分法注意的点：
-1. start + 1 < end，保证死循环
+1. start + 1 < end，保证不出现死循环
 2. mid = start + (end - start) / 2，防止整数溢出
 3. nums[mid] == target 时移动 start 还是 end
 4. 循环结束之后分别判断 start 和 end
