@@ -1,5 +1,10 @@
 
 - [LeetCode](#leetcode)
+    - [2020/2/2](#202022)
+      - [162. Find Peak Element](#162-find-peak-element)
+      - [278. First Bad Version](#278-first-bad-version)
+      - [74. Search a 2D Matrix](#74-search-a-2d-matrix)
+      - [240. Search a 2D Matrix II](#240-search-a-2d-matrix-ii)
     - [2020/2/1](#202021)
       - [34. Find First and Last Position of Element in Sorted Array](#34-find-first-and-last-position-of-element-in-sorted-array)
       - [35. Search Insert Position](#35-search-insert-position)
@@ -27,6 +32,73 @@
 # LeetCode
 
 LeetCode Record
+### 2020/2/2
+#### 162. Find Peak Element
+虽然不是有序数组，但是依然使用二分法。
+
+二分法的核心思想在于按照某种条件，每次都将问题的规模缩小为原来的一半。
+
+本题中规定 nums[-1] = nums[n] = $-\infty$
+
+```c++
+while (start + 1 < end) {
+    int mid = start + (end - start) / 2;
+    if (nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1])
+        return mid;
+    else if (nums[mid] < nums[mid + 1])
+        start = mid;
+    else if (nums[mid] < nums[mid - 1])
+        end = mid;
+}
+```
+
+如果满足第一个 if 条件，那么 mid 就是一个解。
+若不满足第一个 if，则要么 nums[mid] < nums[mid + 1]，要么 nums[mid] < nums[mid - 1]。画图即可
+
+
+
+#### 278. First Bad Version
+
+查找第一个出错的 version，二分法。
+
+#### 74. Search a 2D Matrix
+
+    matrix = [
+    [1,   3,  5,  7],
+    [10, 11, 16, 20],
+    [23, 30, 34, 50]
+    ]
+矩阵元素上下前后有序，两次二分法。
+需要注意的是 
+```c++
+vector<vector<int>> vv;
+vector<int> temp;
+
+vv.size() 为 0
+vv.push_back(temp);
+vv.size() 为 1
+vv表示为 [[]]
+```
+#### 240. Search a 2D Matrix II
+
+    [
+     [1,   4,  7, 11, 15],
+    [2,   5,  8, 12, 19],
+    [3,   6,  9, 16, 22],
+    [10, 13, 14, 17, 24],
+    [18, 21, 23, 26, 30]
+    ]
+相比 74，本题矩阵的特点不同。不适合二分法。从左下角开始查找
+```
+while(prow >= 0 && pcol <= ecol){
+    if(matrix[prow][pcol] == target)
+        return true;
+    else if(matrix[prow][pcol] < target)
+        pcol += 1;
+    else
+        prow -= 1; 
+}
+```
 
 ### 2020/2/1
 #### 34. Find First and Last Position of Element in Sorted Array
