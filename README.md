@@ -1,5 +1,11 @@
 
 - [LeetCode](#leetcode)
+    - [2020/2/6](#202026)
+      - [4. Median of Two Sorted Arrays [Hard]](#4-median-of-two-sorted-arrays-hard)
+    - [2020/2/4](#202024)
+      - [153. Find Minimum in Rotated Sorted Array](#153-find-minimum-in-rotated-sorted-array)
+      - [33. Search in Rotated Sorted Array](#33-search-in-rotated-sorted-array)
+      - [81. Search in Rotated Sorted Array II](#81-search-in-rotated-sorted-array-ii)
     - [2020/2/2](#202022)
       - [162. Find Peak Element](#162-find-peak-element)
       - [278. First Bad Version](#278-first-bad-version)
@@ -32,6 +38,87 @@
 # LeetCode
 
 LeetCode Record
+
+### 2020/2/6
+#### 4. Median of Two Sorted Arrays [Hard]
+二分法的变种，之前二分法的思路都是“排除”，即把输入中不满足条件的一半输入排除。而这道题的思路是增加。
+
+寻找两个有序数组的中位数是寻找两个有数数组第 K 位数的特殊情况。
+
+1. 比较数组 A 的第 k/2 元素与数组 B 的第 k/2 元素，如果 A[startA + k/2 - 1] < B[startB + k/2 - 1] 则说明，A[startA] ~ A[startA + k/2 - 1] 一定在合并之后有序数组的前 k 元素中。
+2. 每次二分增加，即第一次增加 k/2 个元素，第二次增加 k/4 个元素到前 k 个，直到最后一次增加 1 个元素。最后增加的这个元素就是合并之后的有序数组中的第 k 个元素。
+
+代码注意的点：
+1. 迭代下一次查找的是第 k - k / 2 个元素，这样可以保证 k 为奇数时也正确
+2. 如果A[startA] ~ A[start + k/2 - 1]一定是混合后的前 k 个元素内，则下一次迭代时 A 的起点变为 A[startA + k/2]
+
+以上两点反映在代码中则是：
+```c++
+if (halfKthofA < halfKthofB) {
+      return findKth(numsA, startA + k / 2, numsB, startB, k - k / 2);
+    } else {
+      return findKth(numsA, startA, numsB, startB + k / 2, k - k / 2);
+    }
+```
+
+### 2020/2/4
+#### 153. Find Minimum in Rotated Sorted Array
+
+如果是 Sorted Array 那么最小元素一定是 nums[0]
+
+Rotated Sorted Array 的情况下也是使用二分法，画图之后就知道了。
+```c++
+while (start + 1 < end) {
+    // Sorted Array
+    if (nums[start] < nums[end]) {
+        return nums[start];
+    }
+
+    mid = start + (end - start) / 2;
+
+    if (nums[mid] > nums[start]) {
+        start = mid;
+    } else {
+        end = mid;
+     }
+}
+```
+
+
+#### 33. Search in Rotated Sorted Array
+
+    Input: nums = [4,5,6,7,0,1,2], target = 0
+    Output: 4
+
+No Duplicates
+二分法的变化，画图即可
+
+#### 81. Search in Rotated Sorted Array II
+
+    Input: nums = [2,5,6,0,0,1,2], target = 0
+    Output: true
+
+会有重复元素，这时最坏情况下一定是 O(n)
+
+因此就最坏情况下来说，使用顺序遍历的运行时间与使用类似二分法的方法一样，都是 O(n)
+
+但是平均运行时间上，使用类似二分法的方法应该会快一点。
+
+类似二分法的思路：
+只要将重复区域排除，本题就和 33 题一样，所以只需要在 while 循环开始之前：
+```c++
+    mid = start + (end - start) / 2;
+    if (nums[mid] == target) {
+        return true;
+    }
+    while (nums[start] == nums[start + 1] && start + 1 < end) {
+        start++;
+    }
+    while (nums[end] == nums[end - 1] && start + 1 < end){
+        end--;
+    }
+```
+
 ### 2020/2/2
 #### 162. Find Peak Element
 虽然不是有序数组，但是依然使用二分法。
@@ -208,11 +295,15 @@ vector<vector<int>> Solution::_insert(vector<vector<int>>& intervals,
 ### 2020/1/10
 #### 56. Merge Intervals
 
+    Input: [[1,3],[2,6],[8,10],[15,18]]
+    Output: [[1,6],[8,10],[15,18]]
+    Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+
 如果输入区间是有序的，那么有一点：合并肯定是“向后”合并的。如果[a1, a2]中的 a2 小于其后区间的左界，那么 [a1, a2] 左侧的所有区间都不会被影响。
 
-两种方法：
+所以两种方法：
 1. 先排序，再 merge。排序可以使用标准库中的 sort 函数，注意比较函数需要定义为 static
-2. **使用 map**
+2. 不排序**使用 map**
 
 使用 map 时需要注意，map.lower_bound(k) 返回的是迭代器，迭代器指向的元素的 key 值**大于等于**k。所以构造 map 时需要将区间的后界作为key值，前界作为value。map 内部是有序的，map.lower_bound 可以找到第一个可以和插入区间进行合并的区间
 ```c++
