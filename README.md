@@ -1,5 +1,8 @@
 
 - [LeetCode](#leetcode)
+    - [2020/2/7](#202027)
+      - [69. Sqrt(x)](#69-sqrtx)
+      - [300. Longest Increasing Subsequence](#300-longest-increasing-subsequence)
     - [2020/2/6](#202026)
       - [4. Median of Two Sorted Arrays [Hard]](#4-median-of-two-sorted-arrays-hard)
     - [2020/2/4](#202024)
@@ -38,6 +41,39 @@
 # LeetCode
 
 LeetCode Record
+
+### 2020/2/7
+
+#### 69. Sqrt(x)
+二分法，注意防止乘法时整数溢出
+
+#### 300. Longest Increasing Subsequence
+
+    Input: [10,9,2,5,3,7,101,18]
+    Output: 4 
+    Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
+
+1. DP，运行时间为$O(n^{2})$
+2. 最快的方法$O(n log n)$，如下：
+```c++
+int Solution::best_LIS(vector<int>& nums){
+        // res 保存最长递增子序列
+        vector<int> res;
+        for(const auto& i : nums){
+            // t 指向 res 中第一个大于等于 i 的位置
+            auto t = lower_bound(res.begin(), res.end(), i);
+            if(t == res.end()){
+                // expand res
+                res.push_back(i);
+            }
+            else{
+                *t = i;
+            }
+        }
+        return res.size(); 
+}
+```
+for 循环遍历nums，res 是有序数组，所以 lower_bound 利用二分法查找元素位置运行时间为 log n，所以整体运行时间为$O(nlogn)$
 
 ### 2020/2/6
 #### 4. Median of Two Sorted Arrays [Hard]
