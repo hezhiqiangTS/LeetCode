@@ -1,6 +1,6 @@
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <vector>
 using namespace std;
 
 class Solution {
@@ -10,7 +10,7 @@ class Solution {
   }
 
  private:
-  int heapSort(vector<int>&, const int );
+  int heapSort(vector<int>&, const int);
   int quickSortK(vector<int>&, vector<int>::iterator, vector<int>::iterator,
                  const int k);
   vector<int>::iterator partition(vector<int>&, vector<int>::iterator,
@@ -18,8 +18,7 @@ class Solution {
   void exchange(vector<int>::iterator, vector<int>::iterator);
 };
 
-int Solution::heapSort(vector<int>& nums, const int k){
-}
+int Solution::heapSort(vector<int>& nums, const int k) {}
 
 int Solution::quickSortK(vector<int>& nums, vector<int>::iterator begin,
                          vector<int>::iterator end, const int k) {
@@ -30,7 +29,7 @@ int Solution::quickSortK(vector<int>& nums, vector<int>::iterator begin,
   if (nums.end() - mid == k)
     return *mid;
   else if (nums.end() - mid < k)
-    return quickSortK(nums, begin, mid, k);
+    return quickSortK(nums, begin, mid, k - (nums.end() - mid));
 
   else
     return quickSortK(nums, mid + 1, end, k);

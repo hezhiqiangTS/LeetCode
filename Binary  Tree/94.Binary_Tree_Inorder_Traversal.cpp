@@ -23,10 +23,10 @@ class Solution {
         root = root->left;
       }
 
-      root = track.top();
+      TreeNode* temp = track.top();
       track.pop();
-      res.push_back(root->val);
-      root = root->right;
+      res.push_back(track->val);
+      root = temp->right;
     }
 
     return res;
