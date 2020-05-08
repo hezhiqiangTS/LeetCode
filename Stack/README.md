@@ -7,6 +7,7 @@
   - [Stack and Array](#stack-and-array)
       - [Trapping Rain Water](#trapping-rain-water)
       - [Largest Rectangle in Histogram](#largest-rectangle-in-histogram)
+      - [Maximal Rectangle](#maximal-rectangle)
       - [总结](#%e6%80%bb%e7%bb%93)
 
 <!-- /TOC -->
@@ -499,7 +500,78 @@ class Solution {
   }
 };
 ```
+#### Maximal Rectangle
+本题输入为一个矩阵，矩阵元素只有1和0。要求找到1构成的矩形的最大面积。
 
+    Input:
+    [
+      ["1","0","1","0","0"],
+      ["1","0","1","1","1"],
+      ["1","1","1","1","1"],
+      ["1","0","0","1","0"]
+    ]
+    Output: 6
+
+方法：矩阵转为“直方图”，然后按照Largest Rectangle in Histogram的方法计算以每行为底的最大矩形面积。
+
+比如，对于上述输入矩阵，我们可以得到如下直方图矩阵
+
+    4 0 3 0 0 
+    3 0 2 3 2 
+    2 1 1 2 1 
+    1 0 0 1 0 
+
+然后按行计算Largest Rectangle in Histogram，得到最后的结果。
+```c++
+class Solution {
+ public:
+  int maximalRectangle(vector<vector<char>>& matrix) {
+    if (matrix.size() == 0) return 0;
+
+    int maxArea = 0;
+
+    int rowSize = matrix.size();
+    int colSize = matrix[0].size();
+    vector<vector<int>> histograms(rowSize, vector<int>(colSize, 0));
+
+    for (int row = 0; row < rowSize; ++row) {
+      // 计算每一行的直方图
+      for (int col = 0; col < colSize; ++col) {
+        int i = row, j = col;
+        while (i < rowSize && matrix[i][j] == '1') {
+          histograms[row][col] += 1;
+          i++;
+        }
+      }
+
+      maxArea = max(maxArea, reactangleHistogram(histograms[row]));
+    }
+    return maxArea;
+  }
+
+ private:
+  int reactangleHistogram(const vector<int>& histogram) {
+    stack<int> stk;
+    int i = 0, maxArea = 0;
+
+    while (i <= histogram.size()) {
+      int curHeight = (i == hisgotram.size()) ? -1 : histogram[i];
+
+      if (stk.empty() || curHeight > histogram[stk.top()]) {
+        stk.push(i++);
+        continue;
+      }
+
+      int height = histogram[stk.top()];
+      stk.pop();
+      int leftIndex = stk.empty() ? -1 : stk.top();
+      int rightIndex = i;
+      maxArea = max(maxArea, height * (rightIndex - leftIndex - 1));
+    }
+    return maxArea;
+  }
+};
+```
 #### 总结
 栈不光是一种先进后出，可以反应先后顺序的结构，我们也可以将其用作“排序”，尤其是当我们需要寻找类似“最近的大于/小于当前值”的元素时，单调栈可以派上用场。
 
