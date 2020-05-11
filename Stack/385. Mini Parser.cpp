@@ -29,6 +29,7 @@
  *     const vector<NestedInteger> &getList() const;
  * };
  */
+
 class Solution {
  public:
   NestedInteger deserialize(string s) {
