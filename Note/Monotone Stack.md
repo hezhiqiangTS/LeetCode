@@ -6,8 +6,11 @@
   - [单调栈的应用](#%e5%8d%95%e8%b0%83%e6%a0%88%e7%9a%84%e5%ba%94%e7%94%a8)
     - [Next Greater Element I](#next-greater-element-i)
     - [Next Greater Element II](#next-greater-element-ii)
-    - [](#)
+    - [Remove Duplicate Letters](#remove-duplicate-letters)
     - [Sum of Subarray Minimums](#sum-of-subarray-minimums)
+    - [Trapping Rain Water(见Stack笔记)](#trapping-rain-water%e8%a7%81stack%e7%ac%94%e8%ae%b0)
+    - [Largest Rectangle in Histogram(见Stack笔记)](#largest-rectangle-in-histogram%e8%a7%81stack%e7%ac%94%e8%ae%b0)
+    - [Maximal Rectangle(见Stack笔记)](#maximal-rectangle%e8%a7%81stack%e7%ac%94%e8%ae%b0)
 
 <!-- /TOC -->
 
@@ -157,7 +160,42 @@ class Solution {
   }
 };
 ```
-### 
+### Remove Duplicate Letters
+```c++
+class Solution {
+public:
+    string removeDuplicateLetters(string s) {
+        vector<int>     charCount(26, 0);        // 统计string中字符的剩余数量
+        vector<bool>    visited(26, false);    // 记录stack中是否存在某个字符
+        stack<char>     stk;
+        
+        for(auto& c : s){
+            charCount[c - 'a']++;
+        }
+        
+        for(auto& c : s){
+            charCount[c - 'a']--;
+            if(visited[c - 'a'])  // c 为旧字符
+                continue;
+          
+            while(!stk.empty() && c <= stk.top() && charCount[stk.top() - 'a']){
+                visited[stk.top() - 'a'] = false;
+                stk.pop();
+            }
+            
+            visited[c - 'a'] = true;
+            stk.push(c);
+        }
+        
+        string ret;
+        while(!stk.empty()){
+            ret = stk.top() + ret;
+            stk.pop();
+        }
+        return ret;
+    }
+};
+```
 
 ### Sum of Subarray Minimums
 
@@ -216,3 +254,6 @@ public:
     }
 };
 ```
+### Trapping Rain Water(见Stack笔记)
+### Largest Rectangle in Histogram(见Stack笔记)
+### Maximal Rectangle(见Stack笔记)
