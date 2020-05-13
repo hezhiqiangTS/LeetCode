@@ -4,6 +4,7 @@
   - [Stack and String](#stack-and-string)
       - [Mini Parse](#mini-parse)
       - [Flatten Nested List Iterator](#flatten-nested-list-iterator)
+      - [Evaluate Reverse Polish Notation](#evaluate-reverse-polish-notation)
   - [Stack and Array](#stack-and-array)
       - [Trapping Rain Water](#trapping-rain-water)
       - [Largest Rectangle in Histogram](#largest-rectangle-in-histogram)
@@ -379,6 +380,11 @@ class NestedIterator {
  * while (i.hasNext()) cout << i.next();
  */
 ```
+#### Evaluate Reverse Polish Notation
+计算一个逆波兰表达式。
+方式：递归和使用栈的非递归。
+
+
 ## Stack and Array
 #### Trapping Rain Water
 这道题有两种做法，一种是基于Stack，另一种基于数组双指针。这里记录基于Stack的方法。
