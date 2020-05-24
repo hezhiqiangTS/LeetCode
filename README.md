@@ -1,5 +1,8 @@
 
 - [LeetCode](#leetcode)
+    - [2020/5/23](#2020523)
+      - [268. Missing Number](#268-missing-number)
+      - [136. Single Number](#136-single-number)
     - [2020/3/5](#202035)
       - [81. Search in Rotated Sorted Array II[第二遍]](#81-search-in-rotated-sorted-array-ii%e7%ac%ac%e4%ba%8c%e9%81%8d)
     - [2020/3/2](#202032)
@@ -80,6 +83,50 @@ LeetCode Record
 2. 稳定性：归并是稳定排序，快排不是稳定排序
 3. 运行时间：归并 $\Theta(n)logn$，快排只是平均情况下为 nlogn，但是快排的系数要小一点
 4. 空间复杂度：对于数组来说，快排可以O(1)，而归并需要O(n)；对于链表来说则都是O(1)
+
+### 2020/5/23
+#### 268. Missing Number
+位图法。给定从 0 ~ n 之间选取的 n 个不同的数。要求找到其中的 missing number。
+
+解释直接抄LeetCode评论区了
+
+For people who don't understand this solution: what he's doing is he's using the bitwise XOR operator to single out the missing number. How? First, we need to understand the properties of XOR: firstly, XOR'ing a number by itself results in 0. So if we have 1 ^ 1, this will equal 0. Secondly, XOR is commutative and associative - what this means is we can re-order our XOR operations in any way we want and it will result in the same value we would have if we didn't. Finally, a number XOR'd by 0 will result in the same number unchanged. So, essentially, by XOR'ing all the numbers from 0 to n, and all the numbers in the array, we will end up XOR'ing 2 of every number except for the missing one. As we know, it doesn't matter which order we XOR these numbers in - as long as we XOR 2 of the same number, it will result in 0. So eventually we will get 0 ^ the missing number, which, due to the third property I mentioned, will simply equal the missing number. If you're not convinced as to how these properties work, I would recommend taking a quick look as to how they work.
+    
+```c++
+class Solution {
+ public:
+  int missingNumber(vector<int>& nums) {
+    int ret = nums.size();
+    int i = 0;
+
+    for (auto& num : nums) {
+      ret ^= num;  // 按位异或
+      ret ^= i;
+      i++;
+    }
+
+    return ret;
+  }
+};
+```
+#### 136. Single Number
+
+给定n个元素的数组，其中的 n-1 个元素都出现了两次，只有一个元素出现了一次，要求找出该元素。
+
+做法：类似的按位异或方法。
+
+0 ^ N = N
+N ^ N = 0
+
+So..... if N is the single number
+
+N1 ^ N1 ^ N2 ^ N2 ^..............^ Nx ^ Nx ^ N
+
+= (N1^N1) ^ (N2^N2) ^..............^ (Nx^Nx) ^ N
+
+= 0 ^ 0 ^ ..........^ 0 ^ N
+
+= N
 
 ### 2020/3/5
 #### 81. Search in Rotated Sorted Array II[第二遍]

@@ -19,7 +19,8 @@
       - [Container With Most Water](#container-with-most-water)
       - [3Sum](#3sum)
       - [Remove Duplicates from Sorted Array](#remove-duplicates-from-sorted-array)
-      - [Remove Duplicates from Sorted Array](#remove-duplicates-from-sorted-array-1)
+      - [Remove Duplicates from Sorted Array II](#remove-duplicates-from-sorted-array-ii)
+      - [Interval List Intersections](#interval-list-intersections)
   - [Matrix](#matrix)
       - [旋转图片](#%e6%97%8b%e8%bd%ac%e5%9b%be%e7%89%87)
 
@@ -571,7 +572,7 @@ class Solution {
   }
 };
 ```
-#### Remove Duplicates from Sorted Array
+#### Remove Duplicates from Sorted Array II
 本题要求删除重复，使得每个值最多出现两次。
 
 需要修改指针的启动位置为 2
@@ -592,6 +593,27 @@ class Solution {
   }
 };
 ```
+
+#### Interval List Intersections
+
+Given two lists of closed intervals, each list of intervals is pairwise disjoint and in sorted order.
+
+Return the intersection of these two interval lists.
+
+(Formally, a closed interval [a, b] (with a <= b) denotes the set of real numbers x with a <= x <= b.  The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)
+
+    Example 1:
+
+    Input: A = [[0,2],[5,10],[13,23],[24,25]], B = [[1,5],[8,12],[15,24],[25,26]]
+    Output: [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
+    
+    Reminder: The inputs and the desired output are
+    lists of Interval objects, and not arrays or lists.
+
+
+归并排序的merge过程是使用双指针的最典型场景。本题思路与merge过程类似。
+
+
 ## Matrix
 矩阵类问题
 #### 旋转图片

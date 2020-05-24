@@ -4,7 +4,7 @@ class Solution {
     return v1.front() < v2.front();
   }
   vector<vector<int>> merge(vector<vector<int>>& intervals) {
-    return mapAndMerge(intervals);
+    return sortAndMerge(intervals);
   }
 
  private:
@@ -22,20 +22,20 @@ vector<vector<int>> Solution::sortAndMerge(vector<vector<int>>& intervals) {
 
   sort(intervals.begin(), intervals.end(), cmp);
 
-  vector<vector<int>> res;
-  vector<vector<int>>::iterator last = intervals.begin();
+  vector<vector<int>> res{intervals[0]};
+  size_t index = 1;
 
-  for (auto i = intervals.begin() + 1; i != intervals.end(); i++) {
-    if ((*i).front() <= (*last).back()) {
-      _merge(*last, *i);
+  while (index < intervals.size()) {
+    vector<int>& interval = res.back();
+    if (intervals[index].front() > interval.back()) {  // 新区间与旧区间不重合
+      res.push_back(intervals[index++]);
     } else {
-      last = i;
+      interval.front() = min(interval.front(), intervals[index].front());
+      interval.back() = max(interval.back(), intervals[index].back());
+      index++;
     }
   }
 
-  for (auto i : intervals) {
-    if (!i.empty()) res.push_back(i);
-  }
   return res;
 }
 
